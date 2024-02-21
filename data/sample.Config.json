@@ -1,0 +1,11 @@
+{
+	"staffRoles": ["", ""],
+	"logChannelId": "",
+	"modType": {
+		"kick": "kicked 🦵",
+		"ban": "banned ⛔",
+		"unban": "unbanned 🎊",
+		"time_out": "timed out ⏲",
+		"untime_out": "untimed out ⌛"
+	}
+}
