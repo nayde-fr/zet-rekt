@@ -4,7 +4,7 @@ You could use the bot to moderate your server for banning, kicking and timing ou
 
 ## Video tutorial
 
-Wanna see how bot works actually? Watch the video on my [Twitter]() or [Linkedin]() or [Facebook]().
+Wanna see how bot works actually? Watch the video on my [Twitter](https://twitter.com/bilal_the_dev/status/1760613424072200483) or [Linkedin](https://www.linkedin.com/feed/update/urn:li:activity:7166376766045908993/) or [Facebook](https://www.facebook.com/61556182875591/videos/297242246408092/).
 
 ## Installation
 
