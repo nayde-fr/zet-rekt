@@ -3,105 +3,105 @@ const { CommandType } = require("wokcommands");
 const { generateEmbed, sendEmbedToChannel } = require("../../utility/embed");
 const { isStaff, isAboveBot } = require("../../utility/perms");
 const { handleInteractionError } = require("../../utility/interaction");
-const { modType, logChannelId } = require("../../data/config.json");
+const { modType } = require("../../data/config.json");
 const { parseToMs } = require("../../utility/date");
 
 module.exports = {
-	description: "Mod a member!",
+	description: "Modération",
 	type: CommandType.SLASH,
 	options: [
 		{
 			name: "kick",
-			description: "kick a member",
+			description: "Exclure un membre",
 			type: 1,
 			options: [
 				{
-					name: "user",
-					description: "member to kick",
+					name: "utilisateur",
+					description: "Utilisateur à exclure",
 					type: 6,
 					required: true,
 				},
 				{
-					name: "reason",
-					description: "reason for kick",
+					name: "raison",
+					description: "Raison de l'exclusion",
 					type: 3,
 				},
 			],
 		},
 		{
 			name: "ban",
-			description: "ban a member",
+			description: "Bannir un membre",
 			type: 1,
 			options: [
 				{
-					name: "user",
-					description: "member to ban",
+					name: "utilisateur",
+					description: "Utilisateur à bannir",
 					type: 6,
 					required: true,
 				},
 				{
-					name: "reason",
-					description: "reason for kick",
+					name: "raison",
+					description: "Raison de l'exclusion",
 					type: 3,
 				},
 			],
 		},
 		{
 			name: "unban",
-			description: "unban a member",
+			description: "Débannir un membre",
 			type: 1,
 			options: [
 				{
-					name: "user_id",
-					description: "member id to unban",
+					name: "identifiant",
+					description: "Identifiant de l'utilisateur",
 					type: 3,
 					required: true,
 				},
 				{
-					name: "reason",
-					description: "reason for unban",
+					name: "raison",
+					description: "Raison du débanissement",
 					type: 3,
 				},
 			],
 		},
 		{
 			name: "time_out",
-			description: "max limit: 28 days",
+			description: "TO un membre",
 			type: 1,
 			options: [
 				{
-					name: "user",
-					description: "member to time out",
+					name: "utilisateur",
+					description: "Utilisateur à TO",
 					type: 6,
 					required: true,
 				},
 				{
-					name: "duration",
+					name: "duree",
 					description: "Format (1s/3h/4d/2w)",
 					type: 3,
 					required: true,
 				},
 				{
-					name: "reason",
-					description: "reason for time out",
+					name: "raison",
+					description: "Raison du time out",
 					type: 3,
 				},
 			],
 		},
 		{
 			name: "untime_out",
-			description: "untime_out a member",
+			description: "Annuler un timeout",
 			type: 1,
 			options: [
 				{
-					name: "user",
-					description: "member to act on",
+					name: "utilisateur",
+					description: "Utilisateur concerné",
 					type: 6,
 					required: true,
 				},
 				{
-					name: "reason",
-					description: "reason",
+					name: "raison",
+					description: "Raison",
 					type: 3,
 				},
 			],
@@ -114,73 +114,80 @@ module.exports = {
 
 			const commandType = options.getSubcommand();
 
-			let mentionedMember = options.getMember("user");
-			const mentionedUserId = options.getString("user_id");
-			const durationInStr = options.getString("duration");
-			const reason = options.getString("reason") ?? "None";
+			let mentionedMember = options.getMember("utilisateur");
+			const mentionedUserId = options.getString("identifiant");
+			const durationInStr = options.getString("duree");
+			const raison = options.getString("raison") ?? "Non-mentionnée";
 
 			isStaff(member);
 
 			if (commandType !== "unban" && !mentionedMember)
-				throw new Error("Please mention correct member");
+				throw new Error("Merci de mentionner un membre valide");
 
 			if (mentionedMember) isAboveBot(client, mentionedMember, guild);
 
-			if (commandType === "kick") await mentionedMember.kick(reason);
+			if (commandType === "kick"){
+				console.log(`[${interaction.guild}] ${interaction.user.displayName}(${interaction.user.username}) utilise la commande 'kick' sur l'utilisateur ${mentionedMember}`);
+				await mentionedMember.kick(raison);
+			}
 
 			if (commandType === "ban") {
+				console.log(`[${interaction.guild}] ${interaction.user.displayName}(${interaction.user.username}) utilise la commande 'ban' sur l'utilisateur ${mentionedMember}`);
 				if (!mentionedMember.bannable)
-					throw new Error("Member is not bannable.");
-				await mentionedMember.ban({ reason });
+					throw new Error("Ce membre ne peut pas être banni");		
+				await mentionedMember.ban({ raison });
 			}
 
 			if (commandType === "unban") {
+				console.log(`[${interaction.guild}] ${interaction.user.displayName}(${interaction.user.username}) utilise la commande 'unban' sur l'utilisateur <@${mentionedUserId}>`);
 				await guild.bans.fetch(mentionedUserId); // will throw error if no ban found
-				mentionedMember = await guild.bans.remove(mentionedUserId, reason);
+				mentionedMember = await guild.bans.remove(mentionedUserId, raison);
 			}
 
 			if (commandType === "time_out") {
+				console.log(`[${interaction.guild}] ${interaction.user.displayName}(${interaction.user.username}) utilise la commande 'time_out' sur l'utilisateur ${mentionedMember}`);
 				if (mentionedMember.isCommunicationDisabled())
-					throw new Error("Member is already muted");
+					throw new Error("Ce membre est déjà muté");
 
 				const durationInMs = parseToMs(durationInStr);
-
+		
 				await mentionedMember.disableCommunicationUntil(
 					Date.now() + durationInMs,
-					reason
+					raison
 				);
 			}
 
 			if (commandType === "untime_out") {
+				console.log(`[${interaction.guild}] ${interaction.user.displayName}(${interaction.user.username}) utilise la commande 'untime_out' sur l'utilisateur ${mentionedMember}`);
 				if (!mentionedMember.isCommunicationDisabled())
-					throw new Error("Member is not muted");
+					throw new Error("Ce membre n'est actuellement pas muté");
 
-				await mentionedMember.disableCommunicationUntil(null, reason);
+				await mentionedMember.disableCommunicationUntil(null, raison);
 			}
 
 			await interaction.reply({
-				content: "Success!",
+				content: "Action effectuée avec succès ✅",
 				ephemeral: true,
 			});
 
 			// setup some content
 
-			const title = `User ${modType[commandType]}`;
+			const title = `Utilisateur ${modType[commandType]}`;
 
-			let description = `**Target**: ${mentionedMember} | **Mod**: ${user}\n`;
+			let description = `**Cible** : ${mentionedMember} | **Modérateur** : ${user}\n`;
 
-			durationInStr && (description += `**Duration**: \`${durationInStr}\`\n`);
-			description += `**Reason:** \`${reason}\``;
+			durationInStr && (description += `**Durée** : \`${durationInStr}\`\n`);
+			description += `**Raison:** \`${raison}\``;
 
 			const fields = [
-				{ name: "Target", value: `${mentionedMember}`, inline: false },
-				{ name: "Moderator", value: `${user}`, inline: false },
+				{ name: "Cible", value: `${mentionedMember}`, inline: false },
+				{ name: "Modérateur", value: `${user}`, inline: false },
 			];
 
 			durationInStr &&
-				fields.push({ name: "Duration", value: durationInStr, inline: false });
+				fields.push({ name: "Durée", value: durationInStr, inline: false });
 
-			fields.push({ name: "Reason", value: reason ?? "None", inline: false });
+			fields.push({ name: "Raison", value: raison ?? "Non-mentionnée", inline: false });
 
 			// generate embeds
 			const embed = generateEmbed({
@@ -189,19 +196,13 @@ module.exports = {
 				thumbnail: mentionedMember.displayAvatarURL(),
 			});
 
-			const logEmbed = generateEmbed({
-				title,
-				fields,
-				thumbnail: mentionedMember.displayAvatarURL(),
-			});
+			// const logEmbed = generateEmbed({
+			// 	title,
+			// 	fields,
+			// 	thumbnail: mentionedMember.displayAvatarURL(),
+			// });
 
-			// send em
-			const logChannel = await guild.channels.fetch(logChannelId);
-
-			await Promise.all([
-				sendEmbedToChannel(embed, channel),
-				sendEmbedToChannel(logEmbed, logChannel),
-			]);
+			await sendEmbedToChannel(embed, channel);
 		} catch (error) {
 			console.log(error);
 			await handleInteractionError(error.message, interaction);

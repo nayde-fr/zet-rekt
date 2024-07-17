@@ -1,7 +1,7 @@
 const { EmbedBuilder } = require("discord.js");
 
 const generateEmbed = ({ title, description, fields, thumbnail, footer }) => {
-	const embed = new EmbedBuilder().setColor(0x86feff);
+	const embed = new EmbedBuilder().setColor(0xa63b33);
 
 	title && embed.setTitle(title);
 

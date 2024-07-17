@@ -9,7 +9,7 @@ const isStaff = function (member) {
 		member.roles.cache.has(role)
 	);
 
-	if (!hasAnyStaffRole && !isAdmin(member)) throw new Error("Staff only");
+	if (!hasAnyStaffRole && !isAdmin(member)) throw new Error("Vous n'êtes pas autorisé à utiliser cette commande");
 };
 
 const isAboveBot = function (bot, member, guild) {
@@ -19,7 +19,7 @@ const isAboveBot = function (bot, member, guild) {
 		botMember.roles.highest.position <= member.roles.highest.position ||
 		isAdmin(member)
 	)
-		throw new Error("You can not perform action on this member");
+		throw new Error("Vous ne pouvez pas effectuer cette action sur ce membre car son rôle est plus elevé que celui du bot");
 };
 
 module.exports = { isStaff, isAboveBot };

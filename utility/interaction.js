@@ -6,10 +6,11 @@ const replyAndFollowUpInteraction = async (interaction, reply) => {
 
 const handleInteractionError = async (errMsg, interaction) => {
 	const reply = {
-		content: `Err! \`${errMsg}\`.`,
+		content: `Erreur ❌ \`${errMsg}\`.`,
 		ephemeral: true,
 	};
 
+	console.log(`[${interaction.guild}] Erreur avec une interaction.`);
 	await replyAndFollowUpInteraction(interaction, reply);
 };
 

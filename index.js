@@ -22,18 +22,18 @@ const client = new Client({
 });
 
 client.on("ready", async () => {
-	console.log(`${client.user.username} is running 🧶`);
+	console.log(`${client.user.username} is running`);
 
 	client.user.setPresence({
-		activities: [{ name: "Under development 🤖", type: ActivityType.Custom }],
-		status: "dnd",
+		activities: [{ name: "Distribue des 🔇", type: ActivityType.Custom }],
+		status: "Online",
 	});
 
-	await mongoose
-		.connect(process.env.MONGO_URI)
-		.catch((e) => console.log("Something went wrong with the database", e));
+	// await mongoose
+	// 	.connect(process.env.MONGO_URI)
+	// 	.catch((e) => console.log("Something went wrong with the database", e));
 
-	console.log("Connected to database! 📅");
+	// console.log("Connected to database! 📅");
 
 	new WOK({
 		client,

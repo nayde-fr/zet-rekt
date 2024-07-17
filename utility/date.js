@@ -11,7 +11,7 @@ const parseToMs = function (timeString) {
 	};
 
 	if (!conversionFactors.hasOwnProperty(unit) || Number.isNaN(numericValue))
-		throw new Error("Invalid time format. Supported: 1s,1h,1d,1w");
+		throw new Error("Durée invalide. Format accepté : 1s,1h,1d,1w");
 
 	return numericValue * conversionFactors[unit];
 };
