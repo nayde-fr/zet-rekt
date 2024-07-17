@@ -77,7 +77,7 @@ module.exports = {
 				},
 				{
 					name: "duree",
-					description: "Format (1s/3h/4d/2w)",
+					description: "Format (1s/2m/3h/4j)",
 					type: 3,
 					required: true,
 				},
@@ -116,7 +116,7 @@ module.exports = {
 
 			let mentionedMember = options.getMember("utilisateur");
 			const mentionedUserId = options.getString("identifiant");
-			const durationInStr = options.getString("duree");
+			let durationInStr = options.getString("duree");
 			const raison = options.getString("raison") ?? "Non-mentionnée";
 
 			isStaff(member);
@@ -172,9 +172,12 @@ module.exports = {
 
 			// setup some content
 
-			const title = `Utilisateur ${modType[commandType]}`;
+			const title = `${modType[commandType]}`;
 
 			let description = `**Cible** : ${mentionedMember} | **Modérateur** : ${user}\n`;
+
+			durationInStr && (durationInStr = durationInStr.replace('s', 'sec'));
+			durationInStr && (durationInStr = durationInStr.replace('m', 'min'));
 
 			durationInStr && (description += `**Durée** : \`${durationInStr}\`\n`);
 			description += `**Raison:** \`${raison}\``;

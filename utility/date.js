@@ -5,13 +5,13 @@ const parseToMs = function (timeString) {
 
 	const conversionFactors = {
 		s: 1000,
+		m: 60000,
 		h: 3600000,
-		d: 86400000,
-		w: 604800000,
+		j: 86400000
 	};
 
 	if (!conversionFactors.hasOwnProperty(unit) || Number.isNaN(numericValue))
-		throw new Error("Durée invalide. Format accepté : 1s,1h,1d,1w");
+		throw new Error("Durée invalide. Format accepté : 1s,1m,1h,1j");
 
 	return numericValue * conversionFactors[unit];
 };
