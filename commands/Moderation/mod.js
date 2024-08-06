@@ -112,6 +112,11 @@ module.exports = {
 		try {
 			const { options, user, channel, guild, member, client } = interaction;
 
+			if(guild.id == interaction.guild.id){
+				console.log('Appel sur serveur TEST | Non-traité');
+				return;
+			}
+
 			const commandType = options.getSubcommand();
 
 			let mentionedMember = options.getMember("utilisateur");
